@@ -1,19 +1,19 @@
-export const OPEN_STREET_MAP_STYLE = {
+export const GIS_BASEMAP_STYLE = {
   version: 8,
   sources: {
-    openstreetmap: {
+    cartoLightNoLabels: {
       type: "raster",
-      tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+      tiles: ["https://basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}.png"],
       tileSize: 256,
-      attribution: "&copy; OpenStreetMap contributors",
-      maxzoom: 19,
+      attribution: "&copy; OpenStreetMap contributors &copy; CARTO",
+      maxzoom: 20,
     },
   },
   layers: [
     {
-      id: "openstreetmap",
+      id: "carto-light-no-labels",
       type: "raster",
-      source: "openstreetmap",
+      source: "cartoLightNoLabels",
     },
   ],
 };

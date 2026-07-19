@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Layer, Map, Source } from "react-map-gl/maplibre";
-import { MAP_INITIAL_VIEW_STATE, MAP_INTERACTION_OPTIONS, OPEN_STREET_MAP_STYLE } from "../config/mapConfig";
-import { STUDY_AREA_FILL_LAYER_ID, STUDY_AREA_OUTLINE_LAYER_ID, STUDY_AREA_SOURCE_ID } from "../constants/mapConstants";
+import { GIS_BASEMAP_STYLE, MAP_INITIAL_VIEW_STATE, MAP_INTERACTION_OPTIONS } from "../config/mapConfig";
+import { getRenderableLayers } from "../config/layerRegistry";
 import { useLayers } from "../hooks/useLayers";
 import { MapProvider } from "../hooks/useMap";
 import { useStudyArea } from "../hooks/useStudyArea";
@@ -9,41 +9,46 @@ import CoordinateDisplay from "./CoordinateDisplay";
 import MapControls from "./MapControls";
 import ScaleControl from "./ScaleControl";
 import SearchControl from "./SearchControl";
+import { useInfrastructureLayers } from "../../infrastructure/hooks/useInfrastructureLayers";
 
 const MapCanvas = () => {
   const [map, setMap] = useState(null);
   const { data: studyArea, bounds: studyAreaBounds } = useStudyArea(map);
   const { layers, toggleLayer } = useLayers();
+  const { layerData, layerRegistry } = useInfrastructureLayers(studyArea);
+  const renderableLayers = getRenderableLayers(layerData);
 
   return (
     <div className="gis-map-canvas">
       <Map
         {...MAP_INTERACTION_OPTIONS}
         initialViewState={MAP_INITIAL_VIEW_STATE}
-        mapStyle={OPEN_STREET_MAP_STYLE}
+        mapStyle={GIS_BASEMAP_STYLE}
         maxPitch={75}
         onLoad={(event) => setMap(event.target)}
         attributionControl
       >
-        <Source id={STUDY_AREA_SOURCE_ID} type="geojson" data={studyArea}>
-          <Layer
-            id={STUDY_AREA_FILL_LAYER_ID}
-            type="fill"
-            paint={{ "fill-color": "#2563eb", "fill-opacity": 0.16 }}
-            layout={{ visibility: layers.studyArea ? "visible" : "none" }}
-          />
-          <Layer
-            id={STUDY_AREA_OUTLINE_LAYER_ID}
-            type="line"
-            paint={{ "line-color": "#2563eb", "line-width": 3, "line-opacity": 0.95 }}
-            layout={{ visibility: layers.studyArea ? "visible" : "none" }}
-          />
-        </Source>
+        {renderableLayers.map((layer) => (
+          <Source key={layer.source.id} {...layer.source}>
+            {layer.layers.map((mapLayer) => (
+              <Layer
+                key={mapLayer.id}
+                {...mapLayer}
+                layout={{ ...mapLayer.layout, visibility: layers[layer.id] ? "visible" : "none" }}
+              />
+            ))}
+          </Source>
+        ))}
       </Map>
       {map && (
         <MapProvider map={map}>
           <SearchControl map={map} />
-          <MapControls studyAreaBounds={studyAreaBounds} layers={layers} onToggleLayer={toggleLayer} />
+          <MapControls
+            studyAreaBounds={studyAreaBounds}
+            layers={layers}
+            layerRegistry={layerRegistry}
+            onToggleLayer={toggleLayer}
+          />
           <ScaleControl map={map} />
           <CoordinateDisplay map={map} />
         </MapProvider>

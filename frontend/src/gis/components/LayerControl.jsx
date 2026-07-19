@@ -1,7 +1,7 @@
 import { Layers } from "lucide-react";
 import { useState } from "react";
 
-const LayerControl = ({ layers, onToggleLayer }) => {
+const LayerControl = ({ layers, layerRegistry, onToggleLayer }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -19,14 +19,22 @@ const LayerControl = ({ layers, onToggleLayer }) => {
       {isOpen && (
         <section className="gis-layer-panel" aria-label="Layer manager">
           <p>Layers</p>
-          <label>
-            <input
-              type="checkbox"
-              checked={layers.studyArea}
-              onChange={() => onToggleLayer("studyArea")}
-            />
-            Study area
-          </label>
+          {layerRegistry.map((layer) => (
+            <label key={layer.id}>
+              <input
+                type="checkbox"
+                checked={layers[layer.id]}
+                disabled={layer.dataStatus !== "ready"}
+                onChange={() => onToggleLayer(layer.id)}
+              />
+              {layer.displayName}
+              {layer.dataStatus !== "ready" && (
+                <span role={layer.dataStatus === "error" ? "alert" : undefined}>
+                  {layer.dataStatus === "error" ? layer.error : layer.dataStatus}
+                </span>
+              )}
+            </label>
+          ))}
         </section>
       )}
     </div>

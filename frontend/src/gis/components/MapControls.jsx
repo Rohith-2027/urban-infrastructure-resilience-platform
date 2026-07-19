@@ -8,7 +8,7 @@ import RotateControl from "./RotateControl";
 import ZoomControl from "./ZoomControl";
 import { Axis3d } from "lucide-react";
 
-const MapControls = ({ studyAreaBounds, layers, onToggleLayer }) => {
+const MapControls = ({ studyAreaBounds, layers, layerRegistry, onToggleLayer }) => {
   const map = useMap();
   const { zoomIn, zoomOut, goHome } = useCamera(map, studyAreaBounds);
   const { resetNorth, rotate, togglePitch } = useRotation(map);
@@ -22,7 +22,7 @@ const MapControls = ({ studyAreaBounds, layers, onToggleLayer }) => {
       <button type="button" className="gis-control-button" onClick={togglePitch} aria-label="Toggle map pitch" title="Toggle pitch">
         <Axis3d size={18} strokeWidth={2} />
       </button>
-      <LayerControl layers={layers} onToggleLayer={onToggleLayer} />
+      <LayerControl layers={layers} layerRegistry={layerRegistry} onToggleLayer={onToggleLayer} />
     </aside>
   );
 };
