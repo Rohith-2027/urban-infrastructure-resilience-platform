@@ -1,0 +1,10 @@
+import { chromium } from 'playwright';
+const browser = await chromium.launch({ headless: true });
+const page = await browser.newPage();
+await page.goto('http://localhost:5174', { waitUntil: 'networkidle' });
+await page.waitForSelector('.gis-layer-control button[aria-label="Open layer manager"]', { timeout: 15000 });
+await page.click('.gis-layer-control button[aria-label="Open layer manager"]');
+await page.waitForTimeout(1000);
+await page.screenshot({ path: 'layer-panel.png', fullPage: true });
+console.log('Screenshot saved to layer-panel.png');
+await browser.close();

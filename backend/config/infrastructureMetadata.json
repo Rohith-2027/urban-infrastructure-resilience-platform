@@ -1,0 +1,118 @@
+{
+  "infrastructureTypes": {
+    "roads": {
+      "sector": "Transportation",
+      "type": "Linear Infrastructure",
+      "criticality": "Medium",
+      "dependencyLevel": "primary",
+      "dependsOn": [],
+      "supports": ["hospitals", "fireStations", "policeStations", "emergencyServices", "power-substations"],
+      "defaultStatus": "operational"
+    },
+    "hospitals": {
+      "sector": "Healthcare",
+      "type": "Medical Facility",
+      "criticality": "High",
+      "dependencyLevel": "secondary",
+      "dependsOn": ["roads", "emergencyServices"],
+      "supports": ["emergencyServices"],
+      "defaultStatus": "operational"
+    },
+    "fireStations": {
+      "sector": "Emergency Services",
+      "type": "Emergency Response Facility",
+      "criticality": "High",
+      "dependencyLevel": "secondary",
+      "dependsOn": ["roads", "hospitals"],
+      "supports": ["emergencyServices"],
+      "defaultStatus": "operational"
+    },
+    "policeStations": {
+      "sector": "Public Safety",
+      "type": "Security Facility",
+      "criticality": "High",
+      "dependencyLevel": "secondary",
+      "dependsOn": ["roads", "emergencyServices"],
+      "supports": ["emergencyServices"],
+      "defaultStatus": "operational"
+    },
+    "emergencyServices": {
+      "sector": "Emergency Services",
+      "type": "Coordinated Response Network",
+      "criticality": "Critical",
+      "dependencyLevel": "secondary",
+      "dependsOn": ["hospitals", "fireStations", "policeStations"],
+      "supports": [],
+      "defaultStatus": "operational"
+    },
+    "power-substations": {
+      "sector": "Energy",
+      "type": "Power Distribution Hub",
+      "criticality": "Critical",
+      "dependencyLevel": "primary",
+      "dependsOn": ["roads", "powerTransformer"],
+      "supports": ["powerLine", "powerMinorLine", "powerTower", "powerPole"],
+      "defaultStatus": "operational"
+    },
+    "powerTransformer": {
+      "sector": "Energy",
+      "type": "Power Conversion Equipment",
+      "criticality": "High",
+      "dependencyLevel": "primary",
+      "dependsOn": ["roads"],
+      "supports": [],
+      "defaultStatus": "operational"
+    },
+    "powerLine": {
+      "sector": "Energy",
+      "type": "Electrical Transmission Line",
+      "criticality": "Critical",
+      "dependencyLevel": "primary",
+      "dependsOn": ["roads", "power-substations"],
+      "supports": ["powerTower", "powerPole"],
+      "defaultStatus": "operational"
+    },
+    "powerMinorLine": {
+      "sector": "Energy",
+      "type": "Distribution Line",
+      "criticality": "Medium",
+      "dependencyLevel": "primary",
+      "dependsOn": ["roads", "power-substations"],
+      "supports": ["powerTower", "powerPole"],
+      "defaultStatus": "operational"
+    },
+    "powerTower": {
+      "sector": "Energy",
+      "type": "Support Structure",
+      "criticality": "Medium",
+      "dependencyLevel": "primary",
+      "dependsOn": ["roads", "powerLine", "powerMinorLine"],
+      "supports": [],
+      "defaultStatus": "operational"
+    },
+    "powerPole": {
+      "sector": "Energy",
+      "type": "Support Structure",
+      "criticality": "Medium",
+      "dependencyLevel": "primary",
+      "dependsOn": ["roads", "powerLine", "powerMinorLine"],
+      "supports": [],
+      "defaultStatus": "operational"
+    }
+  },
+    "waterInfrastructure": {
+      "sector": "Water",
+      "type": "Water Treatment Plant",
+      "criticality": "Critical",
+      "dependencyLevel": "primary",
+      "dependsOn": ["roads"],
+      "supports": [],
+      "defaultStatus": "operational"
+    },
+  "defaultFeatureMetadata": {
+    "lastUpdated": null,
+    "dataQuality": "verified",
+    "verificationStatus": "manual",
+    "coordinatePrecision": "high"
+  }
+}

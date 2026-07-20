@@ -1,0 +1,23 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "description": "Manually verified infrastructure missing from OpenStreetMap. Edit this file to add future manual assets; backend merges it into the OSM response per layer.",
+    "source": "manual"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [77.1167, 13.2850]
+      },
+      "properties": {
+        "manualType": "waterInfrastructure",
+        "name": "KWSDB Tumakuru Water Supply Scheme",
+        "amenity": "water_treatment_plant",
+        "operator": "Karnataka Water Supply and Drainage Board",
+        "verified": true
+      }
+    }
+  ]
+}

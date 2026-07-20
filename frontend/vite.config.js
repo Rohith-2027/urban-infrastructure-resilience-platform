@@ -11,4 +11,13 @@ export default defineConfig({
   json: {
     stringify: false,
   },
+
+  server: {
+    proxy: {
+      "/api": {
+        target: "http://localhost:5000",
+        changeOrigin: true,
+      },
+    },
+  },
 });

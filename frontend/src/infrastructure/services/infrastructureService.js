@@ -1,4 +1,4 @@
-import { buildOverpassQuery, requestOverpass } from "./overpassService";
+import { API_BASE_URL, getInfrastructureUrl } from "../../config/api";
 
 const createFeatureCollection = (features) => ({ type: "FeatureCollection", features });
 const infrastructureCache = new Map();
@@ -54,6 +54,8 @@ export const standardizeInfrastructureData = (layerId, response, queryType) => {
     fireStations: overpassPointFeaturesToGeoJSON,
     policeStations: overpassPointFeaturesToGeoJSON,
     emergencyServices: overpassPointFeaturesToGeoJSON,
+    "power-substations": overpassPointFeaturesToGeoJSON,
+    waterInfrastructure: overpassPointFeaturesToGeoJSON,
   };
 
   const adapter = standardizationAdapter[queryType];
@@ -73,6 +75,9 @@ export const standardizeInfrastructureData = (layerId, response, queryType) => {
 };
 
 const overpassPointFeaturesToGeoJSON = (response, infrastructureType) => {
+  if (response?.type === "FeatureCollection") {
+    return response;
+  }
   if (!Array.isArray(response?.elements)) {
     throw new Error("Overpass returned an invalid point features response.");
   }
@@ -134,6 +139,9 @@ export const requestInfrastructureData = async (layerId) => ({
 });
 
 const overpassRoadsToGeoJSON = (response) => {
+  if (response?.type === "FeatureCollection") {
+    return response;
+  }
   if (!Array.isArray(response?.elements)) {
     throw new Error("Overpass returned an invalid roads response.");
   }
@@ -170,9 +178,15 @@ export const loadInfrastructureData = (layer, studyArea) => {
   }
 
   const request = (async () => {
-    const query = buildOverpassQuery(layer.provider.queryType, studyArea);
-    const response = await requestOverpass(query);
-    return standardizeInfrastructureData(layer.id, response, layer.provider.queryType);
+    const response = await fetch(getInfrastructureUrl(layer.id));
+
+    if (!response.ok) {
+      const body = await response.json().catch(() => ({}));
+      throw new Error(body.error || "Infrastructure data could not be loaded.");
+    }
+
+    const data = await response.json();
+    return standardizeInfrastructureData(layer.id, data, layer.provider.queryType);
   })();
 
   infrastructureCache.set(cacheKey, request);
