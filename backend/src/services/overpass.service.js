@@ -1,12 +1,10 @@
-const OVERPASS_ENDPOINTS = [
-  "https://overpass-api.de/api/interpreter",
-  "https://overpass.kumi.systems/api/interpreter",
-  "https://overpass.private.coffee/api/interpreter",
-];
-
-const MAX_ATTEMPTS = OVERPASS_ENDPOINTS.length;
-const REQUEST_TIMEOUT_MS = 30_000;
-const RETRIABLE_STATUS_CODES = new Set([429, 500, 502, 503, 504]);
+import {
+  OVERPASS_ENDPOINTS,
+  MAX_ATTEMPTS,
+  REQUEST_TIMEOUT_MS,
+  RETRIABLE_STATUS_CODES,
+  USER_AGENT,
+} from "../constants/overpass.constants.js";
 
 const QUERIES = {
   roads: (polygon) => `[out:json][timeout:30];way["highway"](poly:"${polygon}");out geom;`,
@@ -41,7 +39,10 @@ const requestFromEndpoint = async (endpoint, query, signal) => {
   try {
     const response = await fetch(endpoint, {
       method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8" },
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded;charset=UTF-8",
+        "User-Agent": USER_AGENT,
+      },
       body: `data=${encodeURIComponent(query)}`,
       signal: controller.signal,
     });
@@ -73,7 +74,7 @@ const requestFromEndpoint = async (endpoint, query, signal) => {
   }
 };
 
-/** Execute an Overpass query with retry across available endpoints. */
+/** Execute an Overpass query with failover across all configured endpoints. */
 export const requestOverpass = async (query, signal) => {
   for (const endpoint of OVERPASS_ENDPOINTS.slice(0, MAX_ATTEMPTS)) {
     try {
@@ -82,12 +83,9 @@ export const requestOverpass = async (query, signal) => {
       if (signal?.aborted) {
         throw error;
       }
-
-      if (!error.retryable) {
-        throw new Error("Overpass request was rejected by the selected server", { cause: error });
-      }
     }
   }
 
+  console.error("[Overpass] All configured endpoints failed");
   throw new Error("All Overpass servers are currently unavailable");
 };
