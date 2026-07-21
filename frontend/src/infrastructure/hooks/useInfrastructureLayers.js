@@ -24,6 +24,12 @@ export const useInfrastructureLayers = (studyArea) => {
         try {
           const result = await loadInfrastructureData(layer, studyArea);
 
+          console.group(`[Infrastructure] ${layer.id}`);
+          console.log("Status:", result.dataStatus);
+          console.log("Feature Count:", result.data?.features?.length ?? 0);
+          console.log("Data:", result.data);
+          console.groupEnd();
+
           if (isCurrent) {
             setLayerData((current) => ({
               ...current,

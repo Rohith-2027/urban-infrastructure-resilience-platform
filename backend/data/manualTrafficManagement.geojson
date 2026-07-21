@@ -1,0 +1,367 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "description": "Manually verified traffic control nodes in Tumakuru between Kyathsandra and District Bus Stand. Backend returns these features directly without querying Overpass.",
+    "source": "manual",
+    "verified": true
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [77.1461, 13.3147]
+      },
+      "properties": {
+        "manualType": "trafficManagement",
+        "name": "Kyathsandra Junction",
+        "type": "Adaptive Traffic Signal Controller",
+        "status": "operational",
+        "priority": "High",
+        "controlledRoads": [
+          "NH-48 (Bengaluru–Tumakuru Highway)",
+          "SH-94",
+          "Ring Road"
+        ],
+        "sector": "Transportation",
+        "nodeId": "TM001",
+        "controllerType": "Adaptive Signal Controller",
+        "powerSource": "Power Grid",
+        "communicationMode": "Fiber Network",
+        "backupPower": false,
+        "failureState": "Operational",
+        "trafficDensity": "High",
+        "riskScore": 75,
+        "estimatedRecoveryTime": 20,
+        "dependencies": [
+          "powerSubstations",
+          "communication",
+          "roads"
+        ],
+        "supports": [
+          "roads",
+          "hospitals",
+          "fireStations",
+          "policeStations"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [77.1310, 13.3265]
+      },
+      "properties": {
+        "manualType": "trafficManagement",
+        "name": "Batawadi Junction",
+        "type": "Adaptive Traffic Signal Controller",
+        "status": "operational",
+        "priority": "High",
+        "controlledRoads": [
+          "BH Road (NH-48)",
+          "APMC Yard Road"
+        ],
+        "sector": "Transportation",
+        "nodeId": "TM002",
+        "controllerType": "Adaptive Signal Controller",
+        "powerSource": "Power Grid",
+        "communicationMode": "Fiber Network",
+        "backupPower": false,
+        "failureState": "Operational",
+        "trafficDensity": "High",
+        "riskScore": 82,
+        "estimatedRecoveryTime": 20,
+        "dependencies": [
+          "powerSubstations",
+          "communication",
+          "roads"
+        ],
+        "supports": [
+          "roads",
+          "hospitals",
+          "fireStations",
+          "policeStations"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [77.1132, 13.3398]
+      },
+      "properties": {
+        "manualType": "trafficManagement",
+        "name": "Siddaganga Hospital Junction",
+        "type": "Adaptive Traffic Signal Controller",
+        "status": "operational",
+        "priority": "Critical",
+        "controlledRoads": [
+          "BH Road",
+          "Hospital Access Road"
+        ],
+        "sector": "Transportation",
+        "nodeId": "TM003",
+        "controllerType": "Adaptive Signal Controller",
+        "powerSource": "Power Grid",
+        "communicationMode": "Fiber Network",
+        "backupPower": false,
+        "failureState": "Operational",
+        "trafficDensity": "High",
+        "riskScore": 90,
+        "estimatedRecoveryTime": 15,
+        "dependencies": [
+          "powerSubstations",
+          "communication",
+          "roads"
+        ],
+        "supports": [
+          "roads",
+          "hospitals",
+          "fireStations",
+          "policeStations"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [77.0980, 13.3450]
+      },
+      "properties": {
+        "manualType": "trafficManagement",
+        "name": "NH-206 Bypass Junction",
+        "type": "Adaptive Traffic Signal Controller",
+        "status": "operational",
+        "priority": "High",
+        "controlledRoads": [
+          "BH Road",
+          "NH-206 Bypass"
+        ],
+        "sector": "Transportation",
+        "nodeId": "TM004",
+        "controllerType": "Adaptive Signal Controller",
+        "powerSource": "Power Grid",
+        "communicationMode": "Fiber Network",
+        "backupPower": false,
+        "failureState": "Operational",
+        "trafficDensity": "Medium",
+        "riskScore": 65,
+        "estimatedRecoveryTime": 25,
+        "dependencies": [
+          "powerSubstations",
+          "communication",
+          "roads"
+        ],
+        "supports": [
+          "roads",
+          "hospitals",
+          "fireStations",
+          "policeStations"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [77.0960, 13.3430]
+      },
+      "properties": {
+        "manualType": "trafficManagement",
+        "name": "Gubbi Gate Circle",
+        "type": "Adaptive Traffic Signal Controller",
+        "status": "operational",
+        "priority": "High",
+        "controlledRoads": [
+          "BH Road",
+          "Gubbi Road",
+          "Heggere Road"
+        ],
+        "sector": "Transportation",
+        "nodeId": "TM005",
+        "controllerType": "Adaptive Signal Controller",
+        "powerSource": "Power Grid",
+        "communicationMode": "Fiber Network",
+        "backupPower": false,
+        "failureState": "Operational",
+        "trafficDensity": "High",
+        "riskScore": 80,
+        "estimatedRecoveryTime": 20,
+        "dependencies": [
+          "powerSubstations",
+          "communication",
+          "roads"
+        ],
+        "supports": [
+          "roads",
+          "hospitals",
+          "fireStations",
+          "policeStations"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [77.1005, 13.3405]
+      },
+      "properties": {
+        "manualType": "trafficManagement",
+        "name": "Call Tax Circle",
+        "type": "Adaptive Traffic Signal Controller",
+        "status": "operational",
+        "priority": "High",
+        "controlledRoads": [
+          "Gubbi Gate Road",
+          "City Hall Road",
+          "Ashoka Road"
+        ],
+        "sector": "Transportation",
+        "nodeId": "TM006",
+        "controllerType": "Adaptive Signal Controller",
+        "powerSource": "Power Grid",
+        "communicationMode": "Fiber Network",
+        "backupPower": false,
+        "failureState": "Operational",
+        "trafficDensity": "Very High",
+        "riskScore": 92,
+        "estimatedRecoveryTime": 30,
+        "dependencies": [
+          "powerSubstations",
+          "communication",
+          "roads"
+        ],
+        "supports": [
+          "roads",
+          "hospitals",
+          "fireStations",
+          "policeStations"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [77.1020, 13.3383]
+      },
+      "properties": {
+        "manualType": "trafficManagement",
+        "name": "Shiva Kumar Swamiji Circle",
+        "type": "Adaptive Traffic Signal Controller",
+        "status": "operational",
+        "priority": "Critical",
+        "controlledRoads": [
+          "BH Road",
+          "City Hall Road",
+          "Ring Road Connector"
+        ],
+        "sector": "Transportation",
+        "nodeId": "TM007",
+        "controllerType": "Adaptive Signal Controller",
+        "powerSource": "Power Grid",
+        "communicationMode": "Fiber Network",
+        "backupPower": false,
+        "failureState": "Operational",
+        "trafficDensity": "Very High",
+        "riskScore": 100,
+        "estimatedRecoveryTime": 35,
+        "dependencies": [
+          "powerSubstations",
+          "communication",
+          "roads"
+        ],
+        "supports": [
+          "roads",
+          "hospitals",
+          "fireStations",
+          "policeStations"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [77.1015, 13.3370]
+      },
+      "properties": {
+        "manualType": "trafficManagement",
+        "name": "Town Hall Junction",
+        "type": "Adaptive Traffic Signal Controller",
+        "status": "operational",
+        "priority": "Critical",
+        "controlledRoads": [
+          "Sira Road",
+          "Ashoka Road",
+          "Town Hall Road"
+        ],
+        "sector": "Transportation",
+        "nodeId": "TM008",
+        "controllerType": "Adaptive Signal Controller",
+        "powerSource": "Power Grid",
+        "communicationMode": "Fiber Network",
+        "backupPower": false,
+        "failureState": "Operational",
+        "trafficDensity": "Very High",
+        "riskScore": 95,
+        "estimatedRecoveryTime": 30,
+        "dependencies": [
+          "powerSubstations",
+          "communication",
+          "roads"
+        ],
+        "supports": [
+          "roads",
+          "hospitals",
+          "fireStations",
+          "policeStations"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [77.1025, 13.3411]
+      },
+      "properties": {
+        "manualType": "trafficManagement",
+        "name": "KSRTC Bus Stand Junction",
+        "type": "Adaptive Traffic Signal Controller",
+        "status": "operational",
+        "priority": "High",
+        "controlledRoads": [
+          "Ashoka Road",
+          "KSRTC Link Road",
+          "Private Bus Stand Road"
+        ],
+        "sector": "Transportation",
+        "nodeId": "TM009",
+        "controllerType": "Adaptive Signal Controller",
+        "powerSource": "Power Grid",
+        "communicationMode": "Fiber Network",
+        "backupPower": false,
+        "failureState": "Operational",
+        "trafficDensity": "High",
+        "riskScore": 85,
+        "estimatedRecoveryTime": 25,
+        "dependencies": [
+          "powerSubstations",
+          "communication",
+          "roads"
+        ],
+        "supports": [
+          "roads",
+          "hospitals",
+          "fireStations",
+          "policeStations"
+        ]
+      }
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import { API_BASE_URL, getInfrastructureUrl } from "../../config/api";
+import { getInfrastructureUrl } from "../../config/api";
 
 const createFeatureCollection = (features) => ({ type: "FeatureCollection", features });
 const infrastructureCache = new Map();
@@ -53,9 +53,11 @@ export const standardizeInfrastructureData = (layerId, response, queryType) => {
     hospitals: overpassPointFeaturesToGeoJSON,
     fireStations: overpassPointFeaturesToGeoJSON,
     policeStations: overpassPointFeaturesToGeoJSON,
-    emergencyServices: overpassPointFeaturesToGeoJSON,
-    "power-substations": overpassPointFeaturesToGeoJSON,
+    powerSubstations: overpassPointFeaturesToGeoJSON,
     waterInfrastructure: overpassPointFeaturesToGeoJSON,
+    education: overpassPointFeaturesToGeoJSON,
+    communication: overpassPointFeaturesToGeoJSON,
+    trafficManagement: overpassPointFeaturesToGeoJSON,
   };
 
   const adapter = standardizationAdapter[queryType];
@@ -82,50 +84,41 @@ const overpassPointFeaturesToGeoJSON = (response, infrastructureType) => {
     throw new Error("Overpass returned an invalid point features response.");
   }
 
-  const points = response.elements.filter((element) => element.type === "node");
+  const getLat = (el) => el.lat ?? el.center?.lat;
+  const getLon = (el) => el.lon ?? el.center?.lon;
 
-  if (points.some((point) => typeof point.lat !== "number" || typeof point.lon !== "number")) {
-    throw new Error("Overpass returned a point without valid coordinates.");
-  }
+  const points = response.elements.filter((element) => {
+    const lat = getLat(element);
+    const lon = getLon(element);
+    return typeof lat === "number" && typeof lon === "number";
+  });
 
   return {
     type: "FeatureCollection",
     features: points.map((point) => {
+      const lat = getLat(point);
+      const lon = getLon(point);
       const tags = point.tags || {};
-      const capacity = tags.beds || tags.capacity || null;
-      const subcategory = tags.emergency === "yes" ? "emergency" : tags.healthcare || null;
-      const metadata = {
-        id: `node/${point.id}`,
+      const meta = point.metadata || {};
+
+      const properties = {
+        ...tags,
+        ...meta,
+        infrastructureType: meta.infrastructureType || infrastructureType || null,
+        latitude: lat,
+        longitude: lon,
+        source: meta.source || "overpass",
         osmId: point.id,
-        name: tags.name || null,
-        infrastructureType: infrastructureType || null,
-        subcategory,
-        operator: tags.operator || tags['operator:name'] || null,
-        ownership: tags.ownership || null,
-        status: tags.status || null,
-        capacity: capacity ? Number(capacity) : null,
-        criticality: tags.criticality || null,
-        serviceArea: null,
-        connectedRoadIds: [],
-        dependencyIds: [],
-        latitude: point.lat,
-        longitude: point.lon,
-        tags,
-        source: "overpass",
-        lastUpdated: null,
       };
 
       return {
         type: "Feature",
-        id: metadata.id,
+        id: `point/${point.id}`,
         geometry: {
           type: "Point",
-          coordinates: [point.lon, point.lat],
+          coordinates: [lon, lat],
         },
-        properties: {
-          ...tags,
-          ...metadata,
-        },
+        properties,
       };
     }),
   };
@@ -152,15 +145,44 @@ const overpassRoadsToGeoJSON = (response) => {
     throw new Error("Overpass returned a road without valid geometry.");
   }
 
-  return createFeatureCollection(roads.map((road) => ({
-    type: "Feature",
-    id: `way/${road.id}`,
-    properties: { ...road.tags, osmId: road.id },
-    geometry: {
-      type: "LineString",
-      coordinates: road.geometry.map(({ lon, lat }) => [lon, lat]),
-    },
-  })));
+  const ROAD_CLASSIFICATION = {
+    motorway: "National Highway", trunk: "National Highway",
+    primary: "Primary Road", secondary: "Secondary Road",
+    tertiary: "Tertiary Road",
+    residential: "Residential Road", service: "Residential Road",
+    unclassified: "Residential Road", living_street: "Residential Road",
+  };
+
+  return createFeatureCollection(roads.map((road) => {
+    const tags = road.tags || {};
+    const meta = road.metadata || {};
+    const coords = road.geometry.map(({ lon, lat }) => [lon, lat]);
+
+    const midIdx = Math.floor(coords.length / 2);
+    const representativeLon = coords[midIdx][0];
+    const representativeLat = coords[midIdx][1];
+
+    const name = meta.name || tags.name || tags.ref || tags.alt_name || tags.loc_name || "Unnamed Road";
+
+    return {
+      type: "Feature",
+      id: `way/${road.id}`,
+      properties: {
+        ...tags,
+        ...meta,
+        name,
+        osmId: road.id,
+        source: meta.source || "overpass",
+        roadClass: ROAD_CLASSIFICATION[tags.highway] || "Other Road",
+        representativeLatitude: representativeLat,
+        representativeLongitude: representativeLon,
+      },
+      geometry: {
+        type: "LineString",
+        coordinates: coords,
+      },
+    };
+  }));
 };
 
 const getCacheKey = (layer, studyArea) => `${layer.id}:${JSON.stringify(studyArea)}`;

@@ -11,14 +11,12 @@ const QUERIES = {
   hospitals: (polygon) => `[out:json][timeout:30];node["amenity"="hospital"](poly:"${polygon}");out body;`,
   fireStations: (polygon) => `[out:json][timeout:30];node["amenity"="fire_station"](poly:"${polygon}");out body;`,
   policeStations: (polygon) => `[out:json][timeout:30];node["amenity"="police"](poly:"${polygon}");out body;`,
-  emergencyServices: (polygon) => `[out:json][timeout:30];(node["amenity"="hospital"](poly:"${polygon}");node["amenity"="fire_station"](poly:"${polygon}");node["amenity"="police"](poly:"${polygon}"));out body;`,
-  "power-substations": (polygon) => `[out:json][timeout:30];node["power"="substation"](poly:"${polygon}");out body;`,
-  powerTransformer: (polygon) => `[out:json][timeout:30];node["power"="transformer"](poly:"${polygon}");out body;`,
-  powerLine: (polygon) => `[out:json][timeout:30];way["power"="line"](poly:"${polygon}");out body;`,
-  powerMinorLine: (polygon) => `[out:json][timeout:30];way["power"="minor_line"](poly:"${polygon}");out body;`,
-  powerTower: (polygon) => `[out:json][timeout:30];node["power"="tower"](poly:"${polygon}");out body;`,
-  powerPole: (polygon) => `[out:json][timeout:30];node["power"="pole"](poly:"${polygon}");out body;`,
+  powerSubstations: (polygon) => `[out:json][timeout:30];(node["power"="substation"](poly:"${polygon}");way["power"="substation"](poly:"${polygon}"););out center;`,
   waterInfrastructure: (polygon) => `[out:json][timeout:30];(node["amenity"="water_treatment_plant"](poly:"${polygon}");way["natural"="water"](poly:"${polygon}");node["amenity"="water_tank"](poly:"${polygon}"));out body;`,
+  education: (polygon) => [
+    `[out:json][timeout:30];node["amenity"~"school|college|university"](poly:"${polygon}");out body;`,
+    `[out:json][timeout:30];way["amenity"~"school|college|university"](poly:"${polygon}");out center;`,
+  ],
 };
 
 /** Build Overpass QL query for a given layer type. */

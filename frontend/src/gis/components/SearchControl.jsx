@@ -2,7 +2,7 @@ import { Search, X } from "lucide-react";
 import { useRef, useState } from "react";
 import { focusSearchResult } from "../services/cameraService";
 
-const SearchControl = ({ map }) => {
+const SearchControl = ({ map, onSearchResult }) => {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -44,12 +44,20 @@ const SearchControl = ({ map }) => {
     focusSearchResult(map, result);
     setQuery(result.display_name);
     setResults([]);
+
+    const [south, north, west, east] = result.boundingbox.map(Number);
+    onSearchResult?.({
+      name: result.display_name.split(",")[0],
+      latitude: (south + north) / 2,
+      longitude: (west + east) / 2,
+    });
   };
 
   const clearSearch = () => {
     abortController.current?.abort();
     setQuery("");
     setResults([]);
+    onSearchResult?.(null);
   };
 
   return (

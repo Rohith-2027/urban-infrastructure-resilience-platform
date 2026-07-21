@@ -10,9 +10,10 @@ const DISPLAY_NAMES = {
   hospitals: "Hospitals",
   fireStations: "Fire Stations",
   policeStations: "Police Stations",
-  emergencyServices: "Emergency",
-  "power-substations": "Power Substations",
+  powerSubstations: "Power Substations",
   waterInfrastructure: "Water Infrastructure",
+  education: "Education",
+  trafficManagement: "Traffic Management",
 };
 
 const LAYERS = Object.keys(DISPLAY_NAMES);
@@ -42,7 +43,7 @@ const run = async () => {
         cached = await getCache(layer, STUDY_AREA);
       }
 
-      if (['policeStations', 'fireStations', 'emergencyServices'].includes(layer) && cached) {
+      if (['policeStations', 'fireStations'].includes(layer) && cached) {
         const manualCount = (cached.elements || []).filter((e) => e.tags && e.tags.source === 'manual').length;
         if (manualCount > 0) {
           console.log(`\n[Warmup] ${DISPLAY_NAMES[layer]} manual verification: ${manualCount} manual feature(s) added`);

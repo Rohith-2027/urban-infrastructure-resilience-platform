@@ -1,10 +1,13 @@
 const LAYER_ID_TO_BACKEND = {
   roads: "roads",
   hospitals: "hospitals",
-  "fire-stations": "fireStations",
-  "police-stations": "policeStations",
-  "emergency-services": "emergencyServices",
-  "water-infrastructure": "waterInfrastructure",
+  fireStations: "fireStations",
+  policeStations: "policeStations",
+  waterInfrastructure: "waterInfrastructure",
+  education: "education",
+  powerSubstations: "powerSubstations",
+  communication: "communication",
+  trafficManagement: "trafficManagement",
 };
 
 export const API_BASE_URL = "";

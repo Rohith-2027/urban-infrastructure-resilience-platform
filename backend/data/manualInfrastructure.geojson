@@ -1,7 +1,7 @@
 {
   "type": "FeatureCollection",
   "metadata": {
-    "description": "Manually verified infrastructure missing from OpenStreetMap. Edit this file to add future manual assets; backend merges it into the OSM response per layer.",
+    "description": "Manually verified infrastructure missing from OpenStreetMap. Backend returns these features directly without querying Overpass.",
     "source": "manual"
   },
   "features": [
@@ -9,14 +9,180 @@
       "type": "Feature",
       "geometry": {
         "type": "Point",
-        "coordinates": [77.1167, 13.2850]
+        "coordinates": [77.1039, 13.3377]
       },
       "properties": {
         "manualType": "waterInfrastructure",
-        "name": "KWSDB Tumakuru Water Supply Scheme",
+        "name": "Karnataka Urban Water Supply and Drainage Board, No.1 Sub-Division, Tumakuru",
         "amenity": "water_treatment_plant",
-        "operator": "Karnataka Water Supply and Drainage Board",
-        "verified": true
+        "operator": "Karnataka Urban Water Supply and Drainage Board",
+        "verified": true,
+        "nodeId": "WI-001",
+        "sector": "Water",
+        "status": "operational",
+        "failureState": "Operational",
+        "riskScore": 80,
+        "estimatedRecoveryTime": 240,
+        "dependencies": [
+          "powerSubstations"
+        ],
+        "supports": [
+          "fireStations",
+          "hospitals",
+          "policeStations"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [77.1363, 13.3377]
+      },
+      "properties": {
+        "manualType": "fireStations",
+        "name": "Fire Station - Tumakuru",
+        "amenity": "fire_station",
+        "operator": "Karnataka State Fire and Emergency Services",
+        "phone": "101",
+        "verified": true,
+        "nodeId": "FS-001",
+        "sector": "Emergency Services",
+        "status": "operational",
+        "failureState": "Operational",
+        "riskScore": 65,
+        "estimatedRecoveryTime": 120,
+        "dependencies": [
+          "waterInfrastructure",
+          "powerSubstations",
+          "roads"
+        ],
+        "supports": [
+          "policeStations",
+          "hospitals",
+          "trafficManagement"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [77.136335, 13.322129]
+      },
+      "properties": {
+        "manualType": "fireStations",
+        "name": "Office of the District Fire Officer",
+        "amenity": "fire_station",
+        "operator": "Karnataka State Fire and Emergency Services",
+        "phone": "101",
+        "verified": true,
+        "nodeId": "FS-002",
+        "sector": "Emergency Services",
+        "status": "operational",
+        "failureState": "Operational",
+        "riskScore": 65,
+        "estimatedRecoveryTime": 120,
+        "dependencies": [
+          "waterInfrastructure",
+          "powerSubstations",
+          "roads"
+        ],
+        "supports": [
+          "policeStations",
+          "hospitals",
+          "trafficManagement"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [77.12216, 13.334036]
+      },
+      "properties": {
+        "manualType": "policeStations",
+        "name": "Tumakuru District Police Office",
+        "amenity": "police",
+        "operator": "Karnataka Police",
+        "verified": true,
+        "nodeId": "PS-001",
+        "sector": "Public Safety",
+        "status": "operational",
+        "failureState": "Operational",
+        "riskScore": 60,
+        "estimatedRecoveryTime": 90,
+        "dependencies": [
+          "powerSubstations",
+          "communication",
+          "roads"
+        ],
+        "supports": [
+          "fireStations",
+          "hospitals",
+          "trafficManagement"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [77.106318, 13.341279]
+      },
+      "properties": {
+        "manualType": "policeStations",
+        "name": "Tumakuru Town Police Station",
+        "amenity": "police",
+        "operator": "Karnataka Police",
+        "verified": true,
+        "nodeId": "PS-002",
+        "sector": "Public Safety",
+        "status": "operational",
+        "failureState": "Operational",
+        "riskScore": 60,
+        "estimatedRecoveryTime": 90,
+        "dependencies": [
+          "powerSubstations",
+          "communication",
+          "roads"
+        ],
+        "supports": [
+          "fireStations",
+          "hospitals",
+          "trafficManagement"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [77.1022, 13.3414]
+      },
+      "properties": {
+        "manualType": "policeStations",
+        "name": "Tumakuru Traffic Police Station",
+        "amenity": "police",
+        "operator": "Karnataka Police",
+        "verified": true,
+        "nodeId": "PS-003",
+        "sector": "Public Safety",
+        "status": "operational",
+        "failureState": "Operational",
+        "riskScore": 60,
+        "estimatedRecoveryTime": 90,
+        "dependencies": [
+          "powerSubstations",
+          "communication",
+          "roads"
+        ],
+        "supports": [
+          "fireStations",
+          "hospitals",
+          "trafficManagement"
+        ]
       }
     }
   ]

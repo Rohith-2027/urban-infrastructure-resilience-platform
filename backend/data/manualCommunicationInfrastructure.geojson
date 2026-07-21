@@ -1,0 +1,96 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "description": "Manually verified communication infrastructure. Backend returns these features directly without querying Overpass.",
+    "source": "manual"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [77.105, 13.340]
+      },
+      "properties": {
+        "manualType": "communication",
+        "name": "BSNL Telephone Exchange, Tumakuru",
+        "amenity": "telecommunications",
+        "operator": "BSNL",
+        "verified": true,
+        "nodeId": "CM-001",
+        "sector": "Communication",
+        "status": "operational",
+        "failureState": "Operational",
+        "riskScore": 70,
+        "estimatedRecoveryTime": 180,
+        "dependencies": [
+          "powerSubstations"
+        ],
+        "supports": [
+          "trafficManagement",
+          "policeStations",
+          "fireStations",
+          "hospitals"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [77.108, 13.338]
+      },
+      "properties": {
+        "manualType": "communication",
+        "name": "Airtel Office, Tumakuru",
+        "amenity": "telecommunications",
+        "operator": "Airtel",
+        "verified": true,
+        "nodeId": "CM-002",
+        "sector": "Communication",
+        "status": "operational",
+        "failureState": "Operational",
+        "riskScore": 70,
+        "estimatedRecoveryTime": 180,
+        "dependencies": [
+          "powerSubstations"
+        ],
+        "supports": [
+          "trafficManagement",
+          "policeStations",
+          "fireStations",
+          "hospitals"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [77.110, 13.342]
+      },
+      "properties": {
+        "manualType": "communication",
+        "name": "Jio Office, Tumakuru",
+        "amenity": "telecommunications",
+        "operator": "Reliance Jio",
+        "verified": true,
+        "nodeId": "CM-003",
+        "sector": "Communication",
+        "status": "operational",
+        "failureState": "Operational",
+        "riskScore": 70,
+        "estimatedRecoveryTime": 180,
+        "dependencies": [
+          "powerSubstations"
+        ],
+        "supports": [
+          "trafficManagement",
+          "policeStations",
+          "fireStations",
+          "hospitals"
+        ]
+      }
+    }
+  ]
+}
