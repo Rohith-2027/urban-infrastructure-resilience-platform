@@ -4,6 +4,8 @@ import { flyToBounds } from "./mapService";
 export const returnToStudyArea = (map, bounds) => flyToBounds(map, bounds);
 
 export const focusSearchResult = (map, result) => {
+  if (!result.boundingbox) return;
+
   const [south, north, west, east] = result.boundingbox.map(Number);
 
   flyToBounds(map, [

@@ -1,5 +1,11 @@
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState, useCallback, useMemo } from "react";
 import { X, Copy, Check } from "lucide-react";
+import { useDependencyContext } from "../hooks/useMap";
+import { getIncomingEdges, getOutgoingEdges } from "../dependency/dependencyUtils";
+import {
+  DEPENDENCY_TYPE_COLORS,
+  DEPENDENCY_TYPE_LABEL,
+} from "../layers/dependencyLayer";
 import {
   getInfrastructureIcon,
   getStatusConfig,
@@ -8,10 +14,19 @@ import {
   getChipIcon,
   formatSource,
   getFallbackName,
-  getRoadClassName,
 } from "../utils/infrastructureHelpers";
 
 const NA = "Not Available";
+
+const TARGET_LAYER_LABELS = {
+  hospitals: "Hospitals",
+  education: "Schools",
+  policeStations: "Police",
+  fireStations: "Fire Stations",
+  communication: "Communication",
+  waterInfrastructure: "Water",
+  trafficManagement: "Traffic",
+};
 
 const Field = ({ label, value }) => {
   const display = value != null && value !== "" ? value : NA;
@@ -85,51 +100,165 @@ const RiskBar = ({ score }) => {
   );
 };
 
-const ChipList = ({ items, emptyText }) => {
-  if (!Array.isArray(items) || items.length === 0) {
-    return <p className="gis-drawer-empty">{emptyText}</p>;
-  }
+const StatRow = ({ label, value }) => (
+  <div className="gis-dep-stat-row">
+    <span className="gis-dep-stat-label">{label}</span>
+    <span className="gis-dep-stat-value">{value}</span>
+  </div>
+);
+
+const DependencyStatsCard = ({ edges }) => {
+  const stats = useMemo(() => {
+    if (!edges || edges.length === 0) return null;
+
+    const uniqueTargets = new Set();
+    const connectedNodes = new Set();
+    const byLayer = {};
+
+    for (const edge of edges) {
+      if (edge.target?.id) uniqueTargets.add(edge.target.id);
+      if (edge.source?.id) connectedNodes.add(edge.source.id);
+      if (edge.target?.id) connectedNodes.add(edge.target.id);
+
+      const layer = edge.target?.layer;
+      if (layer) {
+        byLayer[layer] = (byLayer[layer] || 0) + 1;
+      }
+    }
+
+    return {
+      totalDependencies: edges.length,
+      totalSupported: uniqueTargets.size,
+      totalConnected: connectedNodes.size,
+      byLayer,
+    };
+  }, [edges]);
+
+  if (!stats) return null;
 
   return (
-    <div className="gis-chip-list">
-      {items.map((id, i) => {
-        const Icon = getChipIcon(id);
-        return (
-          <span key={`${id}-${i}`} className="gis-chip">
-            {Icon && <Icon size={13} className="gis-chip-icon" />}
-            {getChipLabel(id)}
-          </span>
-        );
-      })}
+    <div className="gis-dep-stats">
+      <div className="gis-dep-stats-grid">
+        <StatRow label="Total Dependencies" value={stats.totalDependencies} />
+        <StatRow label="Supported Infrastructure" value={stats.totalSupported} />
+        <StatRow label="Connected Nodes" value={stats.totalConnected} />
+      </div>
+      {Object.keys(TARGET_LAYER_LABELS).length > 0 && (
+        <div className="gis-dep-stats-breakdown">
+          {Object.entries(TARGET_LAYER_LABELS).map(([layer, label]) => {
+            const count = stats.byLayer[layer] || 0;
+            return (
+              <div key={layer} className="gis-dep-stats-item">
+                <span className="gis-dep-stats-item-label">{label}</span>
+                <span className="gis-dep-stats-item-value">{count}</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
     </div>
   );
 };
 
-const InfrastructureDetailDrawer = ({ properties, onClose }) => {
+const DependencyEdgeItem = ({ edge, direction }) => {
+  const isIncoming = direction === "incoming";
+  const node = isIncoming ? edge.source : edge.target;
+  const edgeType = edge.edgeType || edge.type;
+  const typeColor = DEPENDENCY_TYPE_COLORS[edgeType] || "#3b82f6";
+  const typeLabel = DEPENDENCY_TYPE_LABEL[edgeType] || edgeType;
+  const NodeIcon = node?.layer ? getChipIcon(node.layer) : null;
+  const rank = edge.providerRank;
+  const limit = edge.providerLimit;
+  const roleLabel = rank != null && limit > 1 ? (rank === 1 ? "Primary" : "Backup") : null;
+  const distance = edge.distance;
+  const strength = edge.dependencyStrength;
+  const status = edge.status || edge.edgeStatus;
+
+  return (
+    <div className="gis-dep-edge-item">
+      <div className="gis-dep-edge-node">
+        {NodeIcon && <NodeIcon size={14} className="gis-dep-edge-node-icon" />}
+        <div className="gis-dep-edge-node-info">
+          <span className="gis-dep-edge-node-name">
+            {node?.name || getFallbackName(node?.type) || "Unknown"}
+          </span>
+          <div className="gis-dep-edge-node-meta">
+            {node?.type && <span className="gis-dep-edge-node-type">{node.type}</span>}
+            {node?.layer && <span className="gis-dep-edge-node-sector">{getChipLabel(node.layer)}</span>}
+          </div>
+          <div className="gis-dep-edge-detail-row">
+            {status && (
+              <span className="gis-dep-edge-detail">
+                <span className="gis-dep-edge-detail-label">Status:</span> {status}
+              </span>
+            )}
+            {distance != null && (
+              <span className="gis-dep-edge-detail">
+                <span className="gis-dep-edge-detail-label">Distance:</span> {distance} km
+              </span>
+            )}
+            {strength != null && (
+              <span className="gis-dep-edge-detail">
+                <span className="gis-dep-edge-detail-label">Strength:</span> {strength}
+              </span>
+            )}
+          </div>
+        </div>
+      </div>
+      <div className="gis-dep-edge-badges">
+        {roleLabel && (
+          <span className={`gis-dep-edge-role-badge gis-dep-edge-role-badge--${rank === 1 ? "primary" : "backup"}`}>
+            {roleLabel}
+          </span>
+        )}
+        <span className="gis-dep-edge-type-badge" style={{ background: typeColor, color: "#fff" }}>
+          {typeLabel}
+        </span>
+      </div>
+    </div>
+  );
+};
+
+const InfrastructureDetailDrawer = ({ properties, selectedNodeId, onClose }) => {
   const panelRef = useRef(null);
+  const { dependencyEdges } = useDependencyContext();
+
+  const handleClose = useCallback(() => {
+    const mapCanvas = document.querySelector(".gis-map-canvas");
+    if (mapCanvas) mapCanvas.focus();
+    onClose();
+  }, [onClose]);
 
   useEffect(() => {
     const onKey = (e) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") handleClose();
     };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [onClose]);
+  }, [handleClose]);
 
   useEffect(() => {
     if (panelRef.current) panelRef.current.focus();
   }, []);
 
-  if (!properties) return null;
-
   const p = properties;
+  const nodeId = p ? (selectedNodeId || p.nodeId) : null;
+
+  const incomingEdges = useMemo(
+    () => (nodeId ? getIncomingEdges(dependencyEdges, nodeId) : []),
+    [dependencyEdges, nodeId]
+  );
+
+  const outgoingEdges = useMemo(
+    () => (nodeId ? getOutgoingEdges(dependencyEdges, nodeId) : []),
+    [dependencyEdges, nodeId]
+  );
+
+  if (!properties) return null;
   const Icon = getInfrastructureIcon(p.infrastructureType);
-  const deps = p.dependencies || p.dependsOn;
-  const sups = p.supports;
-  const statusCfg = getStatusConfig(p.status);
 
   return (
-    <div className="gis-drawer-backdrop" onClick={onClose} aria-hidden="true">
+    <div className="gis-drawer-backdrop" onClick={handleClose}>
       <aside
         className="gis-drawer-panel"
         ref={panelRef}
@@ -155,7 +284,7 @@ const InfrastructureDetailDrawer = ({ properties, onClose }) => {
               </div>
             </div>
           </div>
-          <button className="gis-drawer-close" onClick={onClose} aria-label="Close drawer">
+          <button className="gis-drawer-close" onClick={handleClose} aria-label="Close drawer">
             <X size={18} />
           </button>
         </div>
@@ -227,11 +356,28 @@ const InfrastructureDetailDrawer = ({ properties, onClose }) => {
           </SectionCard>
 
           <SectionCard title="Dependencies" delay={100}>
-            <ChipList items={deps} emptyText="No dependencies available" />
+            {incomingEdges.length === 0 ? (
+              <p className="gis-drawer-empty">No dependencies.</p>
+            ) : (
+              <div className="gis-dep-edge-list">
+                {incomingEdges.map((edge) => (
+                  <DependencyEdgeItem key={edge.id} edge={edge} direction="incoming" />
+                ))}
+              </div>
+            )}
           </SectionCard>
 
           <SectionCard title="Supports" delay={150}>
-            <ChipList items={sups} emptyText="No supported infrastructures" />
+            <DependencyStatsCard edges={outgoingEdges} />
+            {outgoingEdges.length === 0 ? (
+              <p className="gis-drawer-empty">No supported infrastructures.</p>
+            ) : (
+              <div className="gis-dep-edge-list">
+                {outgoingEdges.map((edge) => (
+                  <DependencyEdgeItem key={edge.id} edge={edge} direction="outgoing" />
+                ))}
+              </div>
+            )}
           </SectionCard>
 
           <SectionCard title="Metadata" delay={200}>

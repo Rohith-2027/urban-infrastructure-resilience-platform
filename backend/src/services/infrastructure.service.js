@@ -44,6 +44,14 @@ const MANUAL_TRAFFIC_MANAGEMENT_PATH = join(
   "manualTrafficManagement.geojson"
 );
 
+const MANUAL_POWER_SUBSTATIONS_PATH = join(
+  dirname(fileURLToPath(import.meta.url)),
+  "..",
+  "..",
+  "data",
+  "manualPowerSubstations.geojson"
+);
+
 let manualFeatures = [];
 
 try {
@@ -80,16 +88,29 @@ try {
   manualTrafficFeatures = [];
 }
 
+let manualPowerSubstationFeatures = [];
+
+try {
+  const raw = readFileSync(MANUAL_POWER_SUBSTATIONS_PATH, "utf-8");
+  const parsed = JSON.parse(raw);
+  manualPowerSubstationFeatures = Array.isArray(parsed?.features) ? parsed.features : [];
+  console.log(`[ManualPowerSubstations] Loaded ${manualPowerSubstationFeatures.length} manual feature(s)`);
+} catch (error) {
+  console.error(`[ManualPowerSubstations] Could not load dataset: ${error.message}`);
+  manualPowerSubstationFeatures = [];
+}
+
 const MANUAL_LAYER_TYPES = {
   policeStations: ["policeStations"],
   fireStations: ["fireStations"],
   waterInfrastructure: ["waterInfrastructure"],
   communication: ["communication"],
   trafficManagement: ["trafficManagement"],
+  powerSubstations: ["powerSubstations"],
 };
 
 /** Layers served entirely from manual GeoJSON — no Overpass query. */
-const MANUAL_ONLY_LAYERS = new Set(["fireStations", "policeStations", "waterInfrastructure", "communication", "trafficManagement"]);
+const MANUAL_ONLY_LAYERS = new Set(["fireStations", "policeStations", "waterInfrastructure", "communication", "trafficManagement", "powerSubstations"]);
 
 const manualTypesForLayer = (layer) => MANUAL_LAYER_TYPES[layer] || [];
 
@@ -200,24 +221,24 @@ export const enrichFeaturesWithMetadata = (osmData, layer, source = "overpass") 
                 layer === "communication" ? "critical" :
                 layer === "trafficManagement" ? "secondary" : null),
         dependsOn: (layer === "roads" ? [] :
-                layer === "hospitals" ? ["roads"] :
-                layer === "fireStations" ? ["roads", "hospitals"] :
-                layer === "policeStations" ? ["roads"] :
-                layer === "powerSubstations" ? ["roads"] :
-                layer === "waterInfrastructure" ? ["roads"] :
-                layer === "education" ? ["power", "water", "roads", "communication"] :
-                layer === "communication" ? [] :
-                layer === "trafficManagement" ? ["powerSubstations", "communication", "roads"] :
+                layer === "hospitals" ? ["powerSubstations", "waterInfrastructure", "communication"] :
+                layer === "fireStations" ? ["powerSubstations", "waterInfrastructure", "communication"] :
+                layer === "policeStations" ? ["powerSubstations", "waterInfrastructure", "communication"] :
+                layer === "powerSubstations" ? [] :
+                layer === "waterInfrastructure" ? ["powerSubstations"] :
+                layer === "education" ? ["powerSubstations", "waterInfrastructure"] :
+                layer === "communication" ? ["powerSubstations"] :
+                layer === "trafficManagement" ? ["powerSubstations", "communication"] :
                 []),
-        supports: (layer === "roads" ? ["hospitals", "fireStations", "policeStations", "powerSubstations"] :
+        supports: (layer === "roads" ? [] :
                 layer === "hospitals" ? [] :
                 layer === "fireStations" ? [] :
                 layer === "policeStations" ? [] :
-                layer === "powerSubstations" ? [] :
-                layer === "waterInfrastructure" ? [] :
-                layer === "education" ? ["community", "emergencyShelter"] :
-                layer === "communication" ? [] :
-                layer === "trafficManagement" ? ["roads", "hospitals", "fireStations", "policeStations"] :
+                layer === "powerSubstations" ? ["hospitals", "fireStations", "policeStations", "education", "communication", "waterInfrastructure", "trafficManagement"] :
+                layer === "waterInfrastructure" ? ["hospitals", "fireStations", "policeStations", "education"] :
+                layer === "education" ? [] :
+                layer === "communication" ? ["hospitals", "fireStations", "policeStations", "trafficManagement"] :
+                layer === "trafficManagement" ? [] :
                 []),
         name: resolveName(),
         status: tags.status || "operational",
@@ -269,6 +290,10 @@ const fetchManualLayerData = (layer) => {
     );
   } else if (layer === "trafficManagement") {
     features = manualTrafficFeatures.filter((f) =>
+      wantedTypes.includes(f?.properties?.manualType)
+    );
+  } else if (layer === "powerSubstations") {
+    features = manualPowerSubstationFeatures.filter((f) =>
       wantedTypes.includes(f?.properties?.manualType)
     );
   } else {

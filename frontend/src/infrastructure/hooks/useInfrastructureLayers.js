@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { createLayerDataState, LAYER_REGISTRY, getLayerRegistry } from "../../gis/config/layerRegistry";
 import { loadInfrastructureData } from "../services/infrastructureService";
 
+const DEBUG_LOGS = false;
+
 const getConfiguredLayers = () => LAYER_REGISTRY.filter((layer) => layer.provider);
 
 export const useInfrastructureLayers = (studyArea) => {
@@ -24,11 +26,13 @@ export const useInfrastructureLayers = (studyArea) => {
         try {
           const result = await loadInfrastructureData(layer, studyArea);
 
-          console.group(`[Infrastructure] ${layer.id}`);
-          console.log("Status:", result.dataStatus);
-          console.log("Feature Count:", result.data?.features?.length ?? 0);
-          console.log("Data:", result.data);
-          console.groupEnd();
+          if (import.meta.env.DEV && DEBUG_LOGS) {
+            console.group(`[Infrastructure] ${layer.id}`);
+            console.log("Status:", result.dataStatus);
+            console.log("Feature Count:", result.data?.features?.length ?? 0);
+            console.log("Data:", result.data);
+            console.groupEnd();
+          }
 
           if (isCurrent) {
             setLayerData((current) => ({

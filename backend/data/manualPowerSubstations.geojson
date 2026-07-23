@@ -1,0 +1,169 @@
+{
+  "type": "FeatureCollection",
+  "metadata": {
+    "description": "Manually verified power substations missing from OpenStreetMap. Backend returns these features directly without querying Overpass.",
+    "source": "manual"
+  },
+  "features": [
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [77.1055, 13.3395]
+      },
+      "properties": {
+        "manualType": "powerSubstations",
+        "name": "Tumakuru 110kV Substation - West",
+        "power": "substation",
+        "operator": "BESCOM",
+        "voltage": "110000",
+        "verified": true,
+        "nodeId": "PWS-001",
+        "sector": "Energy",
+        "status": "operational",
+        "failureState": "Operational",
+        "riskScore": 90,
+        "estimatedRecoveryTime": 240,
+        "dependencies": [
+          "roads"
+        ],
+        "supports": [
+          "hospitals",
+          "fireStations",
+          "policeStations",
+          "waterInfrastructure",
+          "communication",
+          "trafficManagement"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [77.135, 13.325]
+      },
+      "properties": {
+        "manualType": "powerSubstations",
+        "name": "Tumakuru 110kV Substation - East",
+        "power": "substation",
+        "operator": "BESCOM",
+        "voltage": "110000",
+        "verified": true,
+        "nodeId": "PWS-002",
+        "sector": "Energy",
+        "status": "operational",
+        "failureState": "Operational",
+        "riskScore": 85,
+        "estimatedRecoveryTime": 240,
+        "dependencies": [
+          "roads"
+        ],
+        "supports": [
+          "hospitals",
+          "fireStations",
+          "policeStations",
+          "waterInfrastructure",
+          "communication",
+          "trafficManagement"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [77.12, 13.342]
+      },
+      "properties": {
+        "manualType": "powerSubstations",
+        "name": "Tumakuru 33kV Substation - North",
+        "power": "substation",
+        "operator": "BESCOM",
+        "voltage": "33000",
+        "verified": true,
+        "nodeId": "PWS-003",
+        "sector": "Energy",
+        "status": "operational",
+        "failureState": "Operational",
+        "riskScore": 88,
+        "estimatedRecoveryTime": 180,
+        "dependencies": [
+          "roads"
+        ],
+        "supports": [
+          "hospitals",
+          "fireStations",
+          "policeStations",
+          "waterInfrastructure",
+          "communication",
+          "trafficManagement"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [77.115, 13.315]
+      },
+      "properties": {
+        "manualType": "powerSubstations",
+        "name": "Tumakuru 33kV Substation - South",
+        "power": "substation",
+        "operator": "BESCOM",
+        "voltage": "33000",
+        "verified": true,
+        "nodeId": "PWS-004",
+        "sector": "Energy",
+        "status": "operational",
+        "failureState": "Operational",
+        "riskScore": 82,
+        "estimatedRecoveryTime": 180,
+        "dependencies": [
+          "roads"
+        ],
+        "supports": [
+          "hospitals",
+          "fireStations",
+          "policeStations",
+          "waterInfrastructure",
+          "communication",
+          "trafficManagement"
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "geometry": {
+        "type": "Point",
+        "coordinates": [77.142, 13.318]
+      },
+      "properties": {
+        "manualType": "powerSubstations",
+        "name": "Tumakuru 110kV Substation - Industrial",
+        "power": "substation",
+        "operator": "BESCOM",
+        "voltage": "110000",
+        "verified": true,
+        "nodeId": "PWS-005",
+        "sector": "Energy",
+        "status": "operational",
+        "failureState": "Operational",
+        "riskScore": 78,
+        "estimatedRecoveryTime": 300,
+        "dependencies": [
+          "roads"
+        ],
+        "supports": [
+          "hospitals",
+          "fireStations",
+          "policeStations",
+          "waterInfrastructure",
+          "communication",
+          "trafficManagement"
+        ]
+      }
+    }
+  ]
+}

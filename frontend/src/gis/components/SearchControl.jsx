@@ -45,6 +45,8 @@ const SearchControl = ({ map, onSearchResult }) => {
     setQuery(result.display_name);
     setResults([]);
 
+    if (!result.boundingbox) return;
+
     const [south, north, west, east] = result.boundingbox.map(Number);
     onSearchResult?.({
       name: result.display_name.split(",")[0],
